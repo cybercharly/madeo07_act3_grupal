@@ -1,10 +1,13 @@
 
 data "aws_eks_cluster" "madeo07_act3_grupal_module_cluster" {
-  name = module.eks.cluster_id
+  name       = module.eks.cluster_id
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "madeo07_act3_grupal_module_cluster" {
-  name = module.eks.cluster_id
+  name       = module.eks.cluster_id
+  depends_on = [module.eks]
+
 }
 
 module "eks" {
@@ -34,15 +37,24 @@ module "eks" {
   enable_irsa = true
 
   eks_managed_node_groups = {
-    blue = {}
-    green = {
+    madeo07_act3_nodes = {
+      desired_size = 2
+      max_size     = 3
       min_size     = 1
-      max_size     = 2
-      desired_size = 1
 
       instance_types = ["t3.nano"]
       capacity_type  = "SPOT"
+      key_name       = "UNIR_MACBOOK_PRO_US-WEST-2"
     }
+    # blue = {}
+    # green = {
+    #   min_size     = 1
+    #   max_size     = 2
+    #   desired_size = 1
+
+    #   instance_types = ["t3.nano"]
+    #   capacity_type  = "SPOT"
+    # }
   }
 
   tags = {
