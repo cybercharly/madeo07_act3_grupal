@@ -45,22 +45,22 @@ module "eks" {
       instance_types = ["t3.nano"]
       capacity_type  = "SPOT"
       key_name       = "UNIR_MACBOOK_PRO_US-WEST-2"
-    }
-    # blue = {}
-    # green = {
-    #   min_size     = 1
-    #   max_size     = 2
-    #   desired_size = 1
 
-    #   instance_types = ["t3.nano"]
-    #   capacity_type  = "SPOT"
-    # }
+      ami_type = "AL2_x86_64"
+
+      bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
+    }
   }
 
   tags = {
     terraform = true
     materia   = "madeo07_act3_grupal"
   }
+}
+
+resource "aws_iam_role_policy_attachment" "madeo07_act3_ssm_policy" {
+  role       = module.eks.eks_managed_node_groups["madeo07_act3_nodes"].iam_role_name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "kubernetes_namespace" "madeo07_act3_grupal_namespace" {
