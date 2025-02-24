@@ -1,0 +1,15 @@
+FROM nginx:latest
+# Crear el archivo index.html directamente en el contenedor
+RUN echo '<!DOCTYPE html>\
+<html>\
+<head>\
+  <title>MADEO07</title>\
+  <style>body { text-align: center; font-family: Arial, sans-serif; }</style>\
+</head>\
+<body>\
+  <h1 id="message">Cargando...</h1>\
+  <script>document.getElementById("message").innerText = "MADEO07_actividad3_grupal";</script>\
+</body>\
+</html>' > /usr/share/nginx/html/index.html
+
+CMD ["nginx", "-g", "daemon off;"]

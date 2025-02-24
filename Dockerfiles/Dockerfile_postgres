@@ -1,0 +1,16 @@
+# Dockerfile para PostgreSQL DB
+FROM postgres:latest
+
+# Configuración de entorno para PostgreSQL
+ENV POSTGRES_DB=mydatabase
+ENV POSTGRES_USER=myuser
+ENV POSTGRES_PASSWORD=mypassword
+
+# Copiar el archivo SQL de inicialización si se tiene
+COPY init.sql /docker-entrypoint-initdb.d/
+
+# Exponer el puerto por defecto de PostgreSQL
+EXPOSE 5432
+
+# El comando por defecto para iniciar PostgreSQL (ya gestionado por la imagen oficial)
+CMD ["docker-entrypoint.sh", "postgres"]
