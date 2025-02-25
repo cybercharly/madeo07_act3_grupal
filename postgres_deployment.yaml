@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-db
+  namespace: madeo07-act3-grupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+        - name: postgres
+          image: bitnami/postgresql:latest
+          env:
+            - name: POSTGRES_DB
+              value: "mydatabase"
+            - name: POSTGRES_USER
+              value: "myuser"
+            - name: POSTGRES_PASSWORD
+              value: "mypassword"
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: cybercharly/madeo07_act3_grupal:postgres
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-data-pvc 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data-pvc
+  namespace: madeo07-act3-grupal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: standard  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: madeo07-act3-grupal
+spec:
+  selector:
+    app: postgres-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

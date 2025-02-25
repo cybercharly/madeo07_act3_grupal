@@ -1,11 +1,11 @@
 
 data "aws_eks_cluster" "madeo07_act3_grupal_module_cluster" {
-  name       = module.eks.cluster_id
+  name       = module.eks.cluster_name
   depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "madeo07_act3_grupal_module_cluster" {
-  name       = module.eks.cluster_id
+  name       = module.eks.cluster_name
   depends_on = [module.eks]
 
 }
@@ -42,7 +42,7 @@ module "eks" {
       max_size     = 3
       min_size     = 1
 
-      instance_types = ["t3.nano"]
+      instance_types = ["t3.medium"]
       capacity_type  = "SPOT"
       key_name       = "UNIR_MACBOOK_PRO_US-WEST-2"
 
@@ -61,17 +61,4 @@ module "eks" {
 resource "aws_iam_role_policy_attachment" "madeo07_act3_ssm_policy" {
   role       = module.eks.eks_managed_node_groups["madeo07_act3_nodes"].iam_role_name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}
-
-resource "kubernetes_namespace" "madeo07_act3_grupal_namespace" {
-  metadata {
-    name = "madeo07-act3-grupal"
-    annotations = {
-      name = "madeo07-act3-grupal"
-    }
-  }
-  depends_on = [
-    data.aws_eks_cluster.madeo07_act3_grupal_module_cluster,
-    module.eks,
-  ]
 }
